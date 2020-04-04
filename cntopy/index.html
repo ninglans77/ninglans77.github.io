@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html>
+  
+  <head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rob|工具箱</title>
+    <link type="text/css" href="../css/bootstrap.min.css" rel="stylesheet" />
+	<script type="text/javascript" src="../js/pinyin_dict_withtone.js"></script>
+	<script type="text/javascript" src="../js/pinyinUtil.js"></script>
+	<script type="text/javascript">
+	function getPinyin()
+	{
+		var value = document.getElementById('test').value;
+		var type = document.querySelector('[name="pinyin_type"]:checked').value;
+		var polyphone = document.querySelector('[name="polyphone"]').checked;
+		var result = '';
+		if(value)
+		{
+			switch(type)
+			{
+				case '0': result = pinyinUtil.getPinyin(value, ' ', true, polyphone); break;
+				case '1': result = pinyinUtil.getPinyin(value, ' ', false, polyphone); break;
+				case '2': result = pinyinUtil.getFirstLetter(value, polyphone); break;
+				default: break;
+			}
+		}
+		var html = result;
+		if(result instanceof Array)
+		{
+			html = '<ol>';
+			result.forEach(function(val)
+			{
+				html += '<li>'+val+'</li>';
+			});
+			html += '</ol>';
+		}
+		document.getElementById('result').innerHTML = html;
+	}
+	document.getElementById('test').addEventListener('input', getPinyin);
+	document.getElementsByName('polyphone')[0].addEventListener('change', function(e)
+	{
+		getPinyin();
+	});
+	document.addEventListener('change', function(e)
+	{
+		if(e.target.name === 'pinyin_type')
+		{
+			getPinyin();
+		}
+	});
+	getPinyin();
+	</script>
+
+</head>
+  
+  <body>
+  <div class="jumbotron text-center" style="margin-bottom:0"> 
+   <h1> <a href="../index.html" style="color: black">LiangYin工具箱<br></a><small>愿此器能助君上之忙</small></h1> 
+  </div> 
+    <br />
+    <center>
+	<div>
+		<div>
+			<span>输出类型：</span>
+			<label><input type="radio" name="pinyin_type" value="0" checked/>带声调拼音</label>
+			<label><input type="radio" name="pinyin_type" value="1"/>不带声调拼音</label>
+			<label><input type="radio" name="pinyin_type" value="2"/>拼音首字母</label>
+		</div>
+		<div>
+			<span>多音字：</span>
+			<label><input type="checkbox" name="polyphone"/>简单支持多音字</label>
+			<span style="color: #9E9E9E;">（支持多音字仅仅是将所有可能的组合列举出来，要做到准确识别多音字还需非常完善的词库）</span>
+		</div>
+		<input type="text" id="test" placeholder="请输入文本..." onKeyDown="getPinyin()">
+		<h3>转换结果：</h3>
+		<div id="result"></div>
+		<br>
+		<p>多音字版:<a href="dict.html" target="_blank">跳转链接</a>。</p>
+		<footer>自由地址:https://github.com/sxei/pinyinjs</footer>
+</div>
+    </center>
+    <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+    <script src="../js/jquery.js"></script>
+    <!-- 包括所有已编译的插件 -->
+    <script src="../js/bootstrap.min.js"></script>
+  </body>
+
+</html>

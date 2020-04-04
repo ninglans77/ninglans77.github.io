@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rob|工具箱</title>
+    <link type="text/css" href="../css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            overflow: hidden;
+            height: 100%;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0;
+        }
+
+        .fontTextarea,
+        .btnGroup,
+        .costTime {
+            width: calc(100% - 40px);
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .fontTextarea {
+            outline: none;
+            resize: none;
+            overflow-y: auto;
+            height: 200px;
+            border: 1px solid #bebebe;
+            border-radius: 4px;
+        }
+
+        textarea:disabled {
+            background-color: #f3f4f5;
+            color: #535353;
+        }
+
+        .fontString {
+            padding: 20px;
+        }
+
+        .fontTextarea:focus {
+            box-shadow: 0 0 10px rgba(204, 243, 239, 0.73);
+        }
+
+        .btnGroup>button {
+            background-color: transparent;
+            border: none;
+            border-bottom: 1px solid transparent;
+            padding: 4px 12px;
+            font: 16px "幼圆";
+            color: #141313;
+            outline: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btnGroup>button:last-child {
+            margin-left: 15px;
+        }
+
+        .btnGroup>button:hover,
+        .btnGroup>button:active {
+            border-color: #a3ecec;
+        }
+
+        .costTime {
+            margin-top: 10px;
+        }
+
+        .costTime::after {
+            content: " ";
+            display: block;
+            visibility: hidden;
+            height: 0;
+            clear: both;
+        }
+
+        .costTime p {
+            width: 33.33%;
+            font-size: 16px;
+            float: left;
+        }
+
+        .costTime p span {
+            color: #ff3119;
+            padding: 0 2px;
+        }
+
+        .errorfont {
+            color: #cf2c1a;
+        }
+
+        .rightfont {
+            color: #29bbff;
+        }
+
+        @media screen and (max-width:750px) {
+            .costTime p {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+  <div class="jumbotron text-center" style="margin-bottom:0"> 
+   <h1> <a href="../index.html" style="color: black">LiangYin|Rob工具箱<br></a><small>愿此器能助君上之忙</small></h1> 
+  </div> 
+    <br />
+    <!--示例字-->
+    <p class="fontString"></p>
+    <!--输入文本-->
+    <textarea class="fontTextarea"></textarea>
+    <!--测试按钮-->
+    <div class="btnGroup">
+        <button type="button" class="beginBtn">(重新)开始打字</button>
+        <button type="button" class="finishBtn">结束打字</button>
+    </div>
+    <!--测试所花时间-->
+    <div class="costTime">
+        <p>所花时间:<span class="time">0</span>秒</p>
+        <p>错误数量:<span class="error">0</span>个</p>
+        <p>打字速度:<span class="speed">0</span>个/分</p>
+    </div>
+	<!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+    <script src="../js/jquery.js"></script>
+    <!-- 包括所有已编译的插件 -->
+    <script src="../js/bootstrap.min.js"></script>
+</body>
+<!--js部分-->
+<script type="text/javascript">
+    function _class(str) {
+        return document.getElementsByClassName(str);
+    }
+    var fontstring = _class("fontString")[0];
+    var strExample = "漫步在诗书的时间轮，望着赤日炎炎的夏天，思绪不禁翻开了卷卷黄页。那种感觉如夏雨落入尘世的前奏，雨点柔柔的、软软的，轻轻融进暗香浮动的梦境，飘逸浓浓醉心书香扑面而来，韵味悠久，沁人肺腑融入灵魂深处淡雅迷醉，如涓涓流水般，流过指尖，流过键盘，流到我的心底，填充我的灵魂，陪我一起领悟生活，让书中文字的韵律，渐渐安静我的灵魂，让我在书中沉淀自己，去除生命的糟粕，提取生命的精华。"
+    var costTime = _class("time")[0];
+    var costtime = 0;
+    var errorcount = 0;
+    var timer;
+    var haveEnter = false;
+    var fonttextarea = _class("fontTextarea")[0];
+    var beginbtn = _class("beginBtn")[0],
+        finishbtn = _class("finishBtn")[0];
+    var error = _class("error")[0],
+        speed = _class("speed")[0];
+    window.onload = function () {
+        fonttextarea.disabled = true;
+        fontstring.innerText = strExample;
+        fonttextarea.onkeydown = function () {
+            var strcount = 0;
+            var str = "";
+            if (fonttextarea.value == "") return;
+            if (!haveEnter) {
+                haveEnter = true;
+                costtime = 0;
+                timer = setInterval(function () {
+                    showtimeFun();
+                }, 1000);
+            }
+            for (var i = 0; i < strExample.length - 1; i++) {
+                if (i < fonttextarea.value.length) {
+                    if (fonttextarea.value.slice(i, i + 1) == strExample.slice(i, i + 1)) {
+                        str = str + "<span class='rightfont'>" + strExample.slice(i, i + 1) + "</span>";
+                    }
+                    else {
+                        str = str + "<span class='errorfont'>" + strExample.slice(i, i + 1) + "</span>";
+                        strcount++;
+                    }
+                }
+                else {
+                    str = str + strExample.slice(i, i + 1);
+                }
+            }
+            errorcount = strcount;
+            fontstring.innerHTML = str;
+            error.innerText = errorcount;
+        }
+        function showtimeFun() {
+            costtime++;
+            costTime.innerText = costtime;
+        }
+        beginbtn.onclick = function () {
+            errorcount = 0;
+            fontstring.innerText = strExample;
+            fonttextarea.value = "";
+            fonttextarea.disabled = false;
+            fonttextarea.focus();
+            error.innerText = errorcount;
+            speed.innerText = "0";
+        }
+        finishbtn.onclick = function () {
+            clearInterval(timer);
+            costTime.innerText = 0;
+            fonttextarea.disabled = true;
+            var sp = 0;
+            if (fonttextarea.value == "") {
+                return sp;
+            } else {
+                sp = Number(fonttextarea.value.length * 60 / costtime).toFixed(2);
+                speed.innerText = sp;
+                haveEnter = false;
+            }
+        }
+    }
+</script>
+
+</html>

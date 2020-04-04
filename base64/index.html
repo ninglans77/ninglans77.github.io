@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0" /> 
+  <title>Rob|工具箱</title> 
+  <link type="text/css" href="../css/bootstrap.min.css" rel="stylesheet" /> 
+  <script src="js/base64.js"></script> 
+  <script>
+  function base64en()
+  {
+		  var e_txt = document.getElementById('t').value;
+	      var e_txt = Base64.encode(e_txt);
+	  document.getElementById("tt").innerHTML = e_txt;
+  }
+  function base64dc()
+  {
+		  var d_txt = document.getElementById('t').value;
+	  var d_txt = Base64.decode(d_txt);
+	   document.getElementById("tt").innerHTML = d_txt;
+	  
+  }	
+</script> 
+  <!--[if lt IE 9]>
+     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+     <script src="https://aoss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+<![endif]--> 
+ </head> 
+ <body> 
+  <div class="jumbotron text-center" style="margin-bottom:0"> 
+   <h1> <a href="../index.html" style="color: black">LiangYin|Rob工具箱<br></a><small>愿此器能助君上之忙</small></h1> 
+  </div> 
+  <br /> 
+  <center> 
+   <textarea id="t" placeholder="你要加密/解密的内容"></textarea> 
+   <br /> 
+   <input type="button" value="解密" onclick="base64dc();" /> 
+   <input type="button" value="加密" onclick="base64en();" /> 
+   <br /> 
+   <h4 id="tt">This is a example</h4> 
+   <br><br>
+   <div>	  
+   <h6>Base64.js版权信息:Copyright (c) 2014, Dan Kogai All rights reserved.</h6> 
+   </div>	   
+  </center> 
+  <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) --> 
+  <script src="../js/jquery.js"></script> 
+  <!-- 包括所有已编译的插件 --> 
+  <script src="../js/bootstrap.min.js"></script>   
+ </body>
+</html>
